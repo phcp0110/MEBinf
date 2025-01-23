@@ -1,0 +1,48 @@
+---
+title: "TrabalhoBoston"
+output: html_document
+date: "2024-12-11"
+---
+```{r}
+
+# Gráficos de análise da normalidade e homoscedasticidade dos resíduos
+par(mfrow = c(2, 2))  # Configurar janela gráfica para múltiplos gráficos
+plot(modelo)  # Gráficos diagnósticos automáticos do modelo
+
+# Histograma dos resíduos
+hist(residuals(modelo), main = "Histograma dos resíduos", xlab = "Resíduos", col = "lightblue")
+
+# Teste de normalidade (Shapiro-Wilk)
+teste_normalidade <- shapiro.test(residuals(modelo))
+print(teste_normalidade)
+
+# Análise de variância do modelo (ANOVA)
+resultado_anova <- anova(modelo)
+print(resultado_anova)
+
+# Erro quadrático médio (MSE)
+mse <- mean(residuals(modelo)^2)
+print(paste("Erro Quadrático Médio (MSE):", round(mse, 2)))
+
+# 5. Conclusões
+cat("O modelo de regressão ajustado explicou uma parcela significativa da variabilidade nos preços das habitações.\n")
+cat("Os gráficos diagnósticos indicam que as condições de normalidade e homoscedasticidade foram verificadas com pequenas violações.\n")
+cat("O valor do teste de Shapiro-Wilk para os resíduos foi:", teste_normalidade$p.value, "\n")
+
+```
+```{r}
+# 6. Correlação entre variáveis quantitativas
+# Selecionar apenas variáveis quantitativas
+d2 <- boston %>% select(crim, zn, indus, nox, rm, age, dis, rad, tax, ptratio, b, lstat, medv)
+
+# Determinação da matriz de correlação das variáveis
+correlacao <- cor(d2)
+
+# Gráfico da matriz de correlação
+corrplot(correlacao, method = "circle", tl.cex = 0.8)
+
+# Outras formas de demonstrar o gráfico de correlação
+corrplot(correlacao, method = "number", type = "lower", number.cex = 0.7)
+corrplot.mixed(correlacao, number.digits = 1, tl.cex = 0.6, lower.col = "black")
+```
+
